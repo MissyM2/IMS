@@ -4,10 +4,10 @@
 
 ### Overview
 
-This app is an .net Web API, version 7.0, a Blazor WebAssembly front end.  The subject is an clothing rental db.
+This app is an .net Web API, version 7.0, a Blazor Server front end.  The subject is an inventory management db.
 
 ### Structure
-Solution Name: ClothingRentalManagement
+Solution Name: IMS
 
 Projects:
 
