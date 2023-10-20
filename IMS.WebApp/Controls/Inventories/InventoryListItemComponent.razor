@@ -10,7 +10,8 @@
             <td>@inv.Price</td>
             <td>
                 <button type="button"
-                        class="btn btn-light"></button>
+                        class="btn btn-light"
+                @onclick="@(() => EditInventory(inv.InventoryId))">Edit</button>
             </td>
         </tr>
     }
@@ -20,5 +21,10 @@
 @code {
     [Parameter]
     public List<Inventory> Inventories { get; set; } = new List<Inventory>();
+
+    private void EditInventory(int inventoryId)
+    {
+        NavigationManager.NavigateTo($"/editinventory/{inventoryId}");
+    }
 
 }
