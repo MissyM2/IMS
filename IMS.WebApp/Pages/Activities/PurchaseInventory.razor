@@ -6,6 +6,7 @@
 @inject IViewInventoriesByNameUseCase ViewInventoriesByNameUseCase
 @inject IViewInventoryByIdUseCase ViewInventoryByIdUseCase
 
+<!-- allows developer to inject javascript -->
 @inject IJSRuntime JSRuntime
 
 @* @attribute [Authorize(Policy = "Purchasers")] *@
@@ -64,12 +65,14 @@
    //         authenticationState = await authenticationStateTask;
    // }
 
+   // firstRender is set to true when the page is just loaded.  After the first render, firstRender will be set to false when the page re-renders
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
 
         if (firstRender)
         {
+            // javascript name here is PreventFormSubmission.  This is a static asset, so the method is located in the wwwroot folder
             JSRuntime.InvokeVoidAsync("PreventFormSubmition", "purchase-form");
         }
     }
