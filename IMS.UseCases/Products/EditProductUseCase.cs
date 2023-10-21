@@ -12,14 +12,9 @@ namespace IMS.UseCases.Products
             this.productRepository = productRepository;
         }
 
-        public Task ExecuteAsync(Product product)
-        {
-            throw new NotImplementedException();
-        }
-
-        /*public async Task ExecuteAsync(Product product)
+        public async Task ExecuteAsync(Product product)
         {
             await this.productRepository.UpdateProductAsync(product);
-        }*/
+        }
     }
 }

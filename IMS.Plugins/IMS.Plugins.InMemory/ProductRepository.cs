@@ -31,6 +31,8 @@ namespace IMS.Plugins.InMemory
 
         public async Task<Product?> GetProductByIdAsync(int productId)
         {
+            // this is for the in-memory datastore; by doing it this way, you can be flexible to change to sqlserver db or other db; this way makes unit testing easier also
+            // using an in-memory db for unit testing is much faster
             var prod = _products.FirstOrDefault(x => x.ProductId == productId);
             var newProd = new Product();
             if (prod != null)
@@ -39,6 +41,7 @@ namespace IMS.Plugins.InMemory
                 newProd.ProductName = prod.ProductName;
                 newProd.Price = prod.Price;
                 newProd.Quantity = prod.Quantity;
+                // you have to loop through the product inventories to add
                 newProd.ProductInventories = new List<ProductInventory>();
                 if (prod.ProductInventories != null && prod.ProductInventories.Count > 0)
                 {
