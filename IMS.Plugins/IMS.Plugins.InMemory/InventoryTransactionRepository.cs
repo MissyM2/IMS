@@ -20,7 +20,17 @@ namespace IMS.Plugins.InMemory
 
         public async Task<IEnumerable<InventoryTransaction>> GetInventoryTransactionsAsync(string inventoryName, DateTime? dateFrom, DateTime? dateTo, InventoryTransactionType? transactionType)
         {
+            // the string.empty means I will get all the inventories
+            //  you can do this here, in the in-memory datastore because there will be no performance issue
+            // later, with the db (here we used sqldb), there would be a performance issue, so we do it differently
             var inventories = (await inventoryRepository.GetInventoriesByNameAsync(string.Empty)).ToList();
+
+            // using linq to query in-memory datastore
+            // query below similar to sql but, with linc you do not need a table, you can use it to query a list or in-memory datastore
+            /* select *
+             * from inventorytransactions it
+             * join inventories inv on it.inventoryid = inv.inventoryid ...
+             */
 
             var query = from it in this._inventoryTransactions
                         join inv in inventories on it.InventoryId equals inv.InventoryId
