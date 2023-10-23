@@ -9,7 +9,7 @@
 <!-- allows developer to inject javascript -->
 @inject IJSRuntime JSRuntime
 
-@* @attribute [Authorize(Policy = "Purchasers")] *@
+@attribute [Authorize(Policy = "Purchasers")]
 
 <h3>Purchase Inventory</h3>
 <br />
@@ -53,17 +53,17 @@
 @code {
     private AuthenticationState? authenticationState;
 
-    //[CascadingParameter]
-   // private Task<AuthenticationState>? authenticationStateTask { get; set; }
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationStateTask { get; set; }
 
     private PurchaseViewModel purchaseViewModel = new PurchaseViewModel();
     private Inventory? selectedInventory = null;
 
-   // protected override async Task OnInitializedAsync()
-   // {
-   //     if (authenticationStateTask != null)
-   //         authenticationState = await authenticationStateTask;
-   // }
+   protected override async Task OnInitializedAsync()
+   {
+       if (authenticationStateTask != null)
+           authenticationState = await authenticationStateTask;
+   }
 
    // firstRender is set to true when the page is just loaded.  After the first render, firstRender will be set to false when the page re-renders
     protected override void OnAfterRender(bool firstRender)
@@ -79,17 +79,15 @@
 
     private async Task Purchase()
     {
-        //if (this.selectedInventory != null &&
-        //    authenticationState != null &&
-        //    !string.IsNullOrWhiteSpace(authenticationState.User?.Identity?.Name)
-        if (this.selectedInventory != null)
+        if (this.selectedInventory != null &&
+           authenticationState != null &&
+           !string.IsNullOrWhiteSpace(authenticationState.User?.Identity?.Name))
         {
             await PurchaseInventoryUseCase.ExecuteAsync(
                 this.purchaseViewModel.PONumber,
                 this.selectedInventory,
                 this.purchaseViewModel.QuantityToPurchase,
-                "Missy"
-               // authenticationState.User.Identity.Name
+                authenticationState.User.Identity.Name
             );
         }
 

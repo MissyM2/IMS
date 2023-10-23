@@ -8,9 +8,24 @@ using IMS.UseCases.Products;
 using IMS.UseCases.Reports;
 using IMS.WebApp.Data;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+var constr = builder.Configuration.GetConnectionString("InventoryManagement");
+
+// configure EF Core for Identity
+builder.Services.AddDbContext<AccountDbContext>(options =>
+{
+    options.UseSqlServer(constr);
+});
+
+// configure Identity
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
+    // this is a very basic identity implementation
+    options.SignIn.RequireConfirmedEmail=false;
+}).AddEntityFrameworkStores<AccountDbContext>();
 
 // this line is where we add Entity Frameword Core into our application
 // also, this connects the sqlserver context to this web app
@@ -19,7 +34,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContextFactory<IMSContext>(options =>
 {
     // the UseSqlServer method is accessing the connection string from builder.Configuration
-    options.UseSqlServer(builder.Configuration.GetConnectionString("InventoryManagement"));
+    options.UseSqlServer(constr);
 });
 
 // Add services to the container.
@@ -78,6 +93,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");

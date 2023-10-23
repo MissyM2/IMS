@@ -6,7 +6,7 @@
 @inject ISellProductUseCase SellProductUseCase
 @inject IJSRuntime JSRuntime
 
-@* @attribute [Authorize(Policy = "Sales")] *@
+@attribute [Authorize(Policy = "Sales")]
 
 <h3>Sell Product</h3>
 <br />
@@ -43,20 +43,22 @@
     <br/>
     <button type="submit" class="btn btn-primary">Sell</button>
 </EditForm>
+
+
 @code {
     private AuthenticationState? authenticationState;
 
-    // [CascadingParameter]
-    // private Task<AuthenticationState>? authenticationStateTask { get; set; }
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationStateTask { get; set; }
 
     private SellViewModel sellViewModel = new SellViewModel();
     private Product? selectedProduct = null;
 
-    // protected override async Task OnInitializedAsync()
-    // {
-    //     if (authenticationStateTask != null)
-    //         authenticationState = await authenticationStateTask;
-    // }
+    protected override async Task OnInitializedAsync()
+    {
+        if (authenticationStateTask != null)
+            authenticationState = await authenticationStateTask;
+    }
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -73,7 +75,7 @@
         var list = await ViewProductsByNameUseCase.ExecuteAsync(name);
         if (list == null) return null;
 
-        return list.Select(x => new ItemViewModel { Id = x.ProductId, Name = x.ProductName})?.ToList();
+        return list.Select(x => new ItemViewModel { Id = x.ProductId, Name = x.ProductName })?.ToList();
     }
 
     private async Task OnItemSelected(ItemViewModel item)
@@ -87,18 +89,17 @@
 
     private async Task Sell()
     {
-        //if (this.sellViewModel.Product != null &&
-        //    authenticationState != null &&
-        //    !string.IsNullOrWhiteSpace(authenticationState.User?.Identity?.Name)
-        if (this.sellViewModel.Product != null)
+        if (this.sellViewModel.Product != null &&
+            authenticationState != null &&
+            !string.IsNullOrWhiteSpace(authenticationState.User?.Identity?.Name)
+        )
         {
             await SellProductUseCase.ExecuteAsync(
                 this.sellViewModel.SalesOrderNumber,
                 this.sellViewModel.Product,
                 this.sellViewModel.QuantityToSell,
                 this.sellViewModel.UnitPrice,
-                "Missy"
-                //authenticationState.User.Identity.Name
+                authenticationState.User.Identity.Name
             );
         }
 
@@ -106,3 +107,4 @@
         this.selectedProduct = null;
     }
 }
+
