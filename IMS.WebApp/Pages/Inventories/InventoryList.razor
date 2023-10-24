@@ -3,6 +3,8 @@
 <h3>Inventory List</h3>
 @inject NavigationManager NavigationManager
 
+@attribute [Authorize(Policy = "Inventory")]
+
 <br />
 
 <SearchInventoryComponent OnSearchInventory="OnInventorySearch"></SearchInventoryComponent>
